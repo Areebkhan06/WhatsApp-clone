@@ -4,6 +4,37 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { MoveLeft } from "lucide-react";
 
+// ✅ Add metadata for SEO
+export const metadata = {
+  title: "Sign Up | WhatsApp Clone",
+  description:
+    "Create your account on WhatsApp Clone to chat instantly with friends. Fast, secure, and easy signup using your phone number.",
+  keywords: [
+    "WhatsApp Clone",
+    "Chat App Signup",
+    "React Messaging App",
+    "Realtime Chat",
+    "MERN Stack WhatsApp",
+  ],
+  openGraph: {
+    title: "Sign Up | WhatsApp Clone",
+    description:
+      "Join WhatsApp Clone and connect instantly. Simple signup using your name and phone number.",
+    url: "https://yourdomain.com/signup",
+    siteName: "WhatsApp Clone",
+    images: [
+      {
+        url: "https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg",
+        width: 1200,
+        height: 630,
+        alt: "WhatsApp Clone Sign Up",
+      },
+    ],
+    locale: "en_IN",
+    type: "website",
+  },
+};
+
 const SignupPage = () => {
   const router = useRouter();
   const [form, setForm] = useState({
@@ -19,7 +50,6 @@ const SignupPage = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Basic validation
     if (!form.name || !form.phone || !form.password) {
       alert("Please fill all fields");
       return;
@@ -31,16 +61,17 @@ const SignupPage = () => {
     }
 
     console.log("Signup Data:", form);
-    router.push("/verify"); // Move to OTP verify
+    router.push("/verify");
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#FCF5EB] px-4">
+    <main className="min-h-screen flex items-center justify-center bg-[#FCF5EB] px-4">
       <div className="bg-white w-full max-w-md rounded-2xl border border-gray-300 shadow-lg p-8">
         {/* Back button */}
         <button
           onClick={() => router.back()}
           className="self-start text-gray-600 hover:text-green-600 flex items-center gap-2 text-sm"
+          aria-label="Go back"
         >
           <MoveLeft className="w-4 h-4 mr-1" />
           Back
@@ -50,8 +81,9 @@ const SignupPage = () => {
         <div className="flex justify-center mb-4">
           <img
             src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg"
-            alt="WhatsApp"
+            alt="WhatsApp Clone Logo"
             className="w-14 h-14"
+            loading="lazy"
           />
         </div>
 
@@ -60,42 +92,55 @@ const SignupPage = () => {
           Create Your Account
         </h1>
         <p className="text-sm text-gray-500 text-center mb-6">
-          Join WhatsApp Clone to connect with your friends instantly.
+          Join <strong>WhatsApp Clone</strong> to connect with your friends
+          instantly.
         </p>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <input
-            type="text"
-            name="name"
-            placeholder="Enter your name"
-            value={form.name}
-            onChange={handleChange}
-            className="w-full border border-gray-300 p-3 rounded-lg focus:border-green-500 focus:ring-2 focus:ring-green-100 outline-none"
-          />
-
-          <div className="flex items-center border border-gray-300 rounded-lg overflow-hidden focus-within:border-green-500">
-            <span className="bg-gray-100 px-3 py-2 text-gray-700 font-medium">
-              +91
-            </span>
+        <form onSubmit={handleSubmit} className="space-y-4" aria-label="Signup form">
+          <label className="block">
+            <span className="sr-only">Full Name</span>
             <input
-              type="number"
-              name="phone"
-              placeholder="Enter your phone number"
-              value={form.phone}
+              type="text"
+              name="name"
+              placeholder="Enter your name"
+              value={form.name}
               onChange={handleChange}
-              className="flex-1 px-3 outline-none"
+              className="w-full border border-gray-300 p-3 rounded-lg focus:border-green-500 focus:ring-2 focus:ring-green-100 outline-none"
+              required
             />
-          </div>
+          </label>
 
-          <input
-            type="password"
-            name="password"
-            placeholder="Create a password"
-            value={form.password}
-            onChange={handleChange}
-            className="w-full border border-gray-300 p-3 rounded-lg focus:border-green-500 focus:ring-2 focus:ring-green-100 outline-none"
-          />
+          <label className="block">
+            <span className="sr-only">Phone Number</span>
+            <div className="flex items-center border border-gray-300 rounded-lg overflow-hidden focus-within:border-green-500">
+              <span className="bg-gray-100 px-3 py-2 text-gray-700 font-medium">
+                +91
+              </span>
+              <input
+                type="tel"
+                name="phone"
+                placeholder="Enter your phone number"
+                value={form.phone}
+                onChange={handleChange}
+                className="flex-1 px-3 outline-none"
+                required
+              />
+            </div>
+          </label>
+
+          <label className="block">
+            <span className="sr-only">Password</span>
+            <input
+              type="password"
+              name="password"
+              placeholder="Create a password"
+              value={form.password}
+              onChange={handleChange}
+              className="w-full border border-gray-300 p-3 rounded-lg focus:border-green-500 focus:ring-2 focus:ring-green-100 outline-none"
+              required
+            />
+          </label>
 
           <button
             type="submit"
@@ -116,7 +161,7 @@ const SignupPage = () => {
           </button>
         </p>
       </div>
-    </div>
+    </main>
   );
 };
 
