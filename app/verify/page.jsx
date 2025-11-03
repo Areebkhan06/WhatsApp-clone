@@ -35,7 +35,7 @@ const page = () => {
     }
 
     console.log("Entered OTP:", enteredOtp);
-    router.push("/home"); // Navigate after verification
+    router.push("/dashboard"); // Navigate after verification
   };
 
   return (
