@@ -1,29 +1,122 @@
-import React from "react";
-import { MessageCircle, User, Settings } from "lucide-react";
+"use client";
+import React, { useState } from "react";
+import {
+  MessageCircle,
+  User,
+  Settings,
+  Phone,
+  ListFilterPlus,
+  LoaderCircle,
+  Menu,
+  X,
+} from "lucide-react";
+import Username from "./Username";
 
 const Sidebar = () => {
+  const [open, setOpen] = useState(false);
+
   return (
     <>
-      <aside className="hidden w-80 h-screen bg-[#181818] text-white sm:flex fixed left-0 top-0">
-        <div className="w-11 bg-red-200 h-full"></div>
-        <div className="hidden flex-1 flex-col">
-          <h1 className="text-2xl font-bold mb-6 text-center">WhatsApp</h1>
+      {/* ✅ Desktop Sidebar */}
+      <aside className="hidden sm:flex w-80 h-screen bg-[#181818] text-white fixed left-0 top-0">
+        {/* Left vertical menu */}
+        <div className="w-11 bg-zinc-800 h-full flex flex-col items-center justify-between pt-5">
+          <div>
+            <button className="w-5 h-5 mb-10">
+              <Menu />
+            </button>
+            <div className="flex flex-col items-center gap-5">
+              <button className="p-1 rounded-full">
+                <MessageCircle className="w-4 h-4" />
+              </button>
+              <button className="p-1 rounded-full">
+                <Phone className="w-4 h-4" />
+              </button>
+              <button className="p-1 rounded-full">
+                <LoaderCircle className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+          <div className="flex flex-col items-center gap-5 mb-3">
+            <button>
+              <Settings className="w-5 h-5" />
+            </button>
+            <img
+              className="w-8 h-8 bg-zinc-700 rounded-full p-1"
+              src="/images/icons8-user-48.png"
+              alt="Default User"
+            />
+          </div>
+        </div>
 
-          <nav className="flex flex-col gap-3">
-            <button className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-green-700 transition">
-              <MessageCircle size={18} /> Chats
+        {/* Right chat list */}
+        <div className="flex-1 flex-col">
+          <div className="flex items-center justify-between px-4 py-3 border-b border-gray-700">
+            <h1 className="text-xl font-semibold">Chats</h1>
+            <button className="p-2 rounded-full hover:bg-gray-700 transition">
+              <ListFilterPlus className="w-5 h-5" />
             </button>
-            <button className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-green-700 transition">
-              <User size={18} /> Profile
-            </button>
-            <button className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-green-700 transition">
-              <Settings size={18} /> Settings
-            </button>
+          </div>
+
+          <nav className="flex flex-col gap-3 p-2 overflow-y-auto">
+            <Username />
           </nav>
         </div>
       </aside>
-      {/* mobile menu */}
-      <div className="sm:hidden fixed top-0 left-0 w-11 bg-red-200 h-full"></div>
+
+      {/* ✅ Mobile Menu Bar (always visible) */}
+      <div className="sm:hidden fixed top-0 left-0 w-11 bg-zinc-800 text-white h-full flex flex-col items-center justify-between pt-5 z-40">
+        <div>
+          <button onClick={() => setOpen(!open)} className="w-5 h-5 mb-10">
+            <Menu />
+          </button>
+          <div className="flex flex-col items-center gap-5">
+            <button className="p-1 rounded-full">
+              <MessageCircle className="w-4 h-4" />
+            </button>
+            <button className="p-1 rounded-full">
+              <Phone className="w-4 h-4" />
+            </button>
+            <button className="p-1 rounded-full">
+              <LoaderCircle className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
+
+        <div className="flex flex-col items-center gap-5 mb-3">
+          <button>
+            <Settings className="w-5 h-5" />
+          </button>
+          <img
+            className="w-8 h-8 bg-zinc-700 rounded-full p-1"
+            src="/images/icons8-user-48.png"
+            alt="Default User"
+          />
+        </div>
+      </div>
+
+      {/* ✅ Mobile Chat Drawer with transition */}
+      <div
+        className={`sm:hidden fixed top-0 left-11 w-[89%] h-full bg-black text-white transform transition-transform duration-300 ease-in-out z-30 ${
+          open ? "translate-x-0" : "-translate-x-full"
+        }`}
+      >
+        <div className="flex items-center justify-between px-4 py-3 border-b border-gray-700">
+          <h1 className="text-xl font-semibold">Chats</h1>
+          <button
+            onClick={() => setOpen(false)}
+            className="p-2 rounded-full hover:bg-gray-700 transition"
+          >
+            <X className="w-5 h-5" />
+          </button>
+        </div>
+
+        <nav className="flex flex-col gap-3 p-2 overflow-y-auto">
+          <Username />
+          <Username />
+          <Username />
+        </nav>
+      </div>
     </>
   );
 };
