@@ -2,7 +2,7 @@ import React from "react";
 import { Video, Phone, Search } from "lucide-react";
 const Navbar = () => {
   return (
-    <header className="border-b bg-[#212121] text-white shadow-10sm p-3 flex justify-between items-center">
+    <header className="border-b border-zinc-600 bg-[#212121] text-white shadow-10sm p-3 flex justify-between items-center">
       <div className="flex items-center gap-3">
         <h1 className="bg-red-400 w-11 h-11 rounded-full overflow-hidden">
           <img
