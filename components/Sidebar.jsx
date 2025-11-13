@@ -11,8 +11,11 @@ import {
   X,
 } from "lucide-react";
 import Username from "./Username";
+import { useWhatsapp } from "@/context/WhatsappContext";
+import Link from "next/link";
 
 const Sidebar = () => {
+  const {user} = useWhatsapp();
   const [open, setOpen] = useState(false);
 
   const [users, setUsers] = useState([
@@ -136,14 +139,14 @@ const Sidebar = () => {
             <button className="hover:rotate-90 transition-transform duration-300">
               <Settings className="w-5 h-5 text-gray-400 hover:text-purple-400" />
             </button>
-            <div className="relative group cursor-pointer">
+            <Link   href="/about" className="relative group cursor-pointer">
               <div className="absolute inset-0  rounded-full blur opacity-75 group-hover:opacity-100 transition-opacity"></div>
               <img
                 className="w-8 h-8 bg-zinc-700 rounded-full p-1 relative"
-                src="/images/icons8-user-48.png"
+                src={user?.profilePic || "/images/icons8-user-48.png"}
                 alt="Default User"
               />
-            </div>
+            </Link>
           </div>
         </div>
 

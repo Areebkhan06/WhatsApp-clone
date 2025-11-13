@@ -3,29 +3,67 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { MoveLeft } from "lucide-react";
+import axios from "axios";
+import { useWhatsapp } from "@/context/WhatsappContext";
 
 const SignupClient = () => {
+  const { setUser } = useWhatsapp();
+
   const router = useRouter();
-  const [form, setForm] = useState({ name: "", phone: "", password: "" });
+  const [errors, setErrors] = useState({});
+  const [form, setForm] = useState({
+    name: "",
+    username: "",
+    email: "",
+    password: "",
+  });
 
-  const handleChange = (e) =>
+  const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
+    setErrors({ ...errors, [e.target.name]: "" }); // clear specific error
+  };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    const newErrors = {};
 
-    if (!form.name || !form.phone || !form.password) {
-      alert("Please fill all fields");
+    // ✅ Field validations
+    if (!form.name.trim()) newErrors.name = "Name is required";
+    if (!form.username.trim()) newErrors.username = "Username is required";
+    else if (form.username.length < 3)
+      newErrors.username = "Username must be at least 3 characters long";
+
+    if (!form.email.trim()) newErrors.email = "Email is required";
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email))
+      newErrors.email = "Please enter a valid email";
+
+    if (!form.password.trim()) newErrors.password = "Password is required";
+    else if (form.password.length < 6)
+      newErrors.password = "Password must be at least 6 characters long";
+
+    // ❌ If any validation errors exist, stop here
+    console.log(newErrors);
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
       return;
     }
 
-    if (!/^[6-9]\d{9}$/.test(form.phone)) {
-      alert("Please enter a valid Indian number");
-      return;
-    }
+    try {
+      const { data } = await axios.post(
+        "http://localhost:3015/user/signup",
+        form,{withCredentials:true}
+      );
 
-    console.log("Signup Data:", form);
-    router.push("/verify");
+      if (data.success) {
+        setUser(data.user);
+        router.push("/dashboard");
+      } else {
+        alert(data.message);
+      }
+      alert("Signup successful!");
+    } catch (error) {
+      console.error("❌ Signup error:", error.response?.data || error.message);
+    }
   };
 
   return (
@@ -35,7 +73,6 @@ const SignupClient = () => {
         <button
           onClick={() => router.back()}
           className="self-start text-gray-600 hover:text-green-600 flex items-center gap-2 text-sm"
-          aria-label="Go back"
         >
           <MoveLeft className="w-4 h-4 mr-1" />
           Back
@@ -47,11 +84,9 @@ const SignupClient = () => {
             src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg"
             alt="WhatsApp Clone Logo"
             className="w-14 h-14"
-            loading="lazy"
           />
         </div>
 
-        {/* Heading */}
         <h1 className="text-2xl font-semibold text-center text-gray-800 mb-2">
           Create Your Account
         </h1>
@@ -61,52 +96,76 @@ const SignupClient = () => {
         </p>
 
         {/* Form */}
-        <form
-          onSubmit={handleSubmit}
-          className="space-y-4"
-          aria-label="Signup form"
-        >
-          <label className="block">
+        <form onSubmit={handleSubmit} className="space-y-4">
+          {/* Name */}
+          <div>
             <input
               type="text"
               name="name"
               placeholder="Enter your name"
               value={form.name}
               onChange={handleChange}
-              className="w-full border border-gray-300 p-3 rounded-lg focus:border-green-500 focus:ring-2 focus:ring-green-100 outline-none"
-              required
+              className={`w-full border p-3 rounded-lg outline-none ${
+                errors.name ? "border-red-500" : "border-gray-300"
+              } focus:border-green-500 focus:ring-2 focus:ring-green-100`}
             />
-          </label>
+            {errors.name && (
+              <p className="text-red-500 text-xs mt-1">{errors.name}</p>
+            )}
+          </div>
 
-          <label className="block">
-            <div className="flex items-center border border-gray-300 rounded-lg overflow-hidden focus-within:border-green-500">
-              <span className="bg-gray-100 px-3 py-2 text-gray-700 font-medium">
-                +91
-              </span>
-              <input
-                type="tel"
-                name="phone"
-                placeholder="Enter your phone number"
-                value={form.phone}
-                onChange={handleChange}
-                className="flex-1 px-3 outline-none"
-                required
-              />
-            </div>
-          </label>
+          {/* Username */}
+          <div>
+            <input
+              type="text"
+              name="username"
+              placeholder="Choose a username"
+              value={form.username}
+              onChange={handleChange}
+              className={`w-full border p-3 rounded-lg outline-none ${
+                errors.username ? "border-red-500" : "border-gray-300"
+              } focus:border-green-500 focus:ring-2 focus:ring-green-100`}
+            />
+            {errors.username && (
+              <p className="text-red-500 text-xs mt-1">{errors.username}</p>
+            )}
+          </div>
 
-          <label className="block">
+          {/* Email */}
+          <div>
+            <input
+              type="email"
+              name="email"
+              placeholder="Enter your email"
+              value={form.email}
+              onChange={handleChange}
+              className={`w-full border p-3 rounded-lg outline-none ${
+                errors.email ? "border-red-500" : "border-gray-300"
+              } focus:border-green-500 focus:ring-2 focus:ring-green-100`}
+            />
+            {errors.email && (
+              <p className="text-red-500 text-xs mt-1">{errors.email}</p>
+            )}
+          </div>
+
+          {/* Password */}
+          <div>
             <input
               type="password"
               name="password"
               placeholder="Create a password"
               value={form.password}
               onChange={handleChange}
-              className="w-full border border-gray-300 p-3 rounded-lg focus:border-green-500 focus:ring-2 focus:ring-green-100 outline-none"
-              required
+              className={`w-full border p-3 rounded-lg outline-none ${
+                errors.password ? "border-red-500" : "border-gray-300"
+              } focus:border-green-500 focus:ring-2 focus:ring-green-100`}
             />
-          </label>
+            {errors.password && (
+              <p className="text-red-500 text-xs mt-1">{errors.password}</p>
+            )}
+          </div>
 
+          {/* Button */}
           <button
             type="submit"
             className="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-3 rounded-lg transition-all duration-300 shadow-md"

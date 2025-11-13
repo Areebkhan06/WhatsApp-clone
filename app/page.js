@@ -6,19 +6,19 @@ import { MoveUpRight } from "lucide-react";
 
 export default function Page() {
   const router = useRouter();
-  const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
 
   const handleNext = (e) => {
     e.preventDefault();
 
-    // ✅ Validate Indian 10-digit number
-    if (!/^[6-9]\d{9}$/.test(phone)) {
-      alert("Please enter a valid Indian phone number");
+    // ✅ Simple email validation
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      alert("Please enter a valid email address");
       return;
     }
 
-    console.log("Phone:", phone);
-    router.push("/verify"); // navigate to OTP page
+    console.log("Email:", email);
+    router.push("/verify"); // navigate to verification page
   };
 
   return (
@@ -33,11 +33,10 @@ export default function Page() {
 
         {/* Title */}
         <h1 className="text-2xl font-semibold text-gray-800">
-          Enter your phone number
+          Enter your email
         </h1>
         <p className="text-gray-500 text-sm text-center">
-          This works only for{" "}
-          <span className="text-green-600 font-medium">Indian</span> numbers (+91)
+          Use your registered email to continue
         </p>
 
         {/* Input Field */}
@@ -46,14 +45,11 @@ export default function Page() {
           className="flex flex-col w-full space-y-4 items-center"
         >
           <div className="flex items-center w-full border border-gray-300 rounded-lg overflow-hidden focus-within:border-green-500">
-            <span className="bg-gray-100 text-gray-700 px-3 py-2 font-medium">
-              +91
-            </span>
             <input
-              type="number"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              placeholder="Enter your number"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Enter your email"
               className="flex-1 p-3 outline-none text-gray-800 bg-white"
               required
             />
@@ -71,7 +67,7 @@ export default function Page() {
         {/* Footer text */}
         <div className="mt-6 space-y-2 text-center">
           <p className="text-xs text-gray-400">
-            WhatsApp will send an SMS message to verify your number.
+            We’ll send a verification link to your email.
           </p>
           <p className="text-xs text-gray-500 flex items-center justify-center gap-1">
             Don’t have an account?
