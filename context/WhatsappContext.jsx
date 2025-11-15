@@ -7,11 +7,13 @@ const WhatsappContext = createContext();
 
 // ✅ Provider component
 export const WhatsappProvider = ({ children }) => {
-  const BackendURL = process.env.BACKEND_URL || "http://localhost:3015";
+  const BackendURL =
+    process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:3015";
   const [user, setUser] = useState(null);
   const [selectedChat, setselectedChat] = useState(null);
   const [messages, setMessages] = useState([]);
 
+  
   useEffect(() => {
     const checkAuth = async () => {
       try {
@@ -61,7 +63,7 @@ export const WhatsappProvider = ({ children }) => {
         setselectedChat,
         messages,
         setMessages,
-        getMessages
+        getMessages,
       }}
     >
       {children}
