@@ -1,17 +1,17 @@
 import React from "react";
 import { Video, Phone, Search } from "lucide-react";
-const Navbar = () => {
+const Navbar = ({name,image}) => {
   return (
     <header className="border-b border-zinc-600 bg-[#212121] text-white shadow-10sm p-3 flex justify-between items-center">
       <div className="flex items-center gap-3">
-        <h1 className="bg-red-400 w-11 h-11 rounded-full overflow-hidden">
+        <h1 className="border-zinc-500 border w-11 h-11 rounded-full overflow-hidden">
           <img
             className="w-full h-full object-cover"
-            src="https://images.pexels.com/photos/614810/pexels-photo-614810.jpeg"
+            src={image}
             alt=""
           />
         </h1>
-        <p className="font-semibold ">Sameer GYm</p>
+        <p className="font-semibold ">{name}</p>
       </div>
       <div className="flex items-center">
         <div className="flex items-center rounded-lg overflow-hidden mr-3">

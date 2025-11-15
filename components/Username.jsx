@@ -1,12 +1,18 @@
 "use client";
 import React, { useState } from "react";
 import { Check, CheckCheck } from "lucide-react";
+import { useWhatsapp } from "@/context/WhatsappContext";
 
-const Username = ({ image, name, time, message }) => {
+const Username = ({ image, name, time, message, id }) => {
+  const { setselectedChat } = useWhatsapp();
   const [isOnline, setIsOnline] = useState(true); // true = double tick shown
 
+  const handleClick = () => {
+    setselectedChat({ image, name, time, message, id });
+  };
+
   return (
-    <div className="flex items-center gap-3 p-3 hover:bg-[#2a2a2a] rounded-xl transition-colors cursor-pointer">
+    <div onClick={handleClick} className="flex items-center gap-3 p-3 hover:bg-[#2a2a2a] rounded-xl transition-colors cursor-pointer">
       {/* Profile Image */}
       <div className="w-14 h-14 rounded-full overflow-hidden border border-gray-700 shrink-0">
         <img

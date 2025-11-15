@@ -3,22 +3,37 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { MoveUpRight } from "lucide-react";
+import { useWhatsapp } from "@/context/WhatsappContext";
+import axios from "axios";
 
 export default function Page() {
   const router = useRouter();
+  const { BackendURL } = useWhatsapp();
   const [email, setEmail] = useState("");
 
-  const handleNext = (e) => {
+  const handleNext = async (e) => {
     e.preventDefault();
 
-    // ✅ Simple email validation
+    // Email validation
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      alert("Please enter a valid email address");
+      alert("Please enter a valid email");
       return;
     }
 
-    console.log("Email:", email);
-    router.push("/verify"); // navigate to verification page
+    try {
+      const { data } = await axios.post(`${BackendURL}/user/login`, { email });
+
+      if (data.success) {
+        alert("OTP sent successfully");
+
+        // Save email for verify page
+        localStorage.setItem("loginEmail", email);
+
+        router.push("/verify");
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (

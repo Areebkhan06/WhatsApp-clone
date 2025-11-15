@@ -7,7 +7,7 @@ import axios from "axios";
 import { useWhatsapp } from "@/context/WhatsappContext";
 
 const SignupClient = () => {
-  const { setUser } = useWhatsapp();
+  const { setUser,BackendURL } = useWhatsapp();
 
   const router = useRouter();
   const [errors, setErrors] = useState({});
@@ -50,7 +50,7 @@ const SignupClient = () => {
 
     try {
       const { data } = await axios.post(
-        "http://localhost:3015/user/signup",
+        `${BackendURL}/user/signup`,
         form,{withCredentials:true}
       );
 

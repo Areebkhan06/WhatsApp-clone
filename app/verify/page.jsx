@@ -3,11 +3,14 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
+import axios from "axios";
+import { useWhatsapp } from "@/context/WhatsappContext";
 
 const page = () => {
   const router = useRouter();
+  const { BackendURL, setUser } = useWhatsapp();
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
-
+  const email = localStorage.getItem("loginEmail");
   // Handle OTP input changes
   const handleChange = (value, index) => {
     // Allow only a single digit (0–9)
@@ -25,17 +28,33 @@ const page = () => {
   };
 
   // Handle OTP verification
-  const handleVerify = (e) => {
+  const handleVerify = async (e) => {
     e.preventDefault();
 
     const enteredOtp = otp.join("");
+
     if (enteredOtp.length !== 6) {
       alert("Please enter a valid 6-digit OTP");
       return;
     }
 
-    console.log("Entered OTP:", enteredOtp);
-    router.push("/dashboard"); // Navigate after verification
+    try {
+      const { data } = await axios.post(
+        `${BackendURL}/user/verify-otp`,
+        { email, otp: enteredOtp }, // ✅ FIXED
+        { withCredentials: true }
+      );
+
+      if (data.success) {
+        alert("verified");
+        setUser(data.user);
+        router.push("/dashboard");
+      } else {
+        alert(data.message);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (

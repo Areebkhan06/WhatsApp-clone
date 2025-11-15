@@ -15,8 +15,6 @@ export default function DashboardLayout({ children }) {
 
           {/* Main content area */}
           <div className="flex-1 ml-10 sm:ml-80 min-h-screen flex flex-col">
-            {/* Header */}
-            <Navbar />
 
             {/* Page content */}
             <main className="flex-1">{children}</main>
