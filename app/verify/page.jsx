@@ -1,6 +1,5 @@
 "use client";
-
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import axios from "axios";
@@ -9,17 +8,23 @@ import { useWhatsapp } from "@/context/WhatsappContext";
 const page = () => {
   const router = useRouter();
   const { BackendURL, setUser } = useWhatsapp();
+
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
-  const email = localStorage.getItem("loginEmail");
-  // Handle OTP input changes
+  const [email, setEmail] = useState("");  // FIXED
+
+  // ✅ Load email safely on client side only
+  useEffect(() => {
+    const stored = localStorage.getItem("loginEmail");
+    if (stored) setEmail(stored);
+  }, []);
+
+  // Handle OTP input
   const handleChange = (value, index) => {
-    // Allow only a single digit (0–9)
     if (/^\d?$/.test(value)) {
       const newOtp = [...otp];
       newOtp[index] = value;
       setOtp(newOtp);
 
-      // Move to next input automatically when a digit is entered
       if (value && index < 5) {
         const next = document.getElementById(`otp-${index + 1}`);
         next?.focus();
@@ -27,7 +32,7 @@ const page = () => {
     }
   };
 
-  // Handle OTP verification
+  // Handle verification
   const handleVerify = async (e) => {
     e.preventDefault();
 
@@ -41,7 +46,7 @@ const page = () => {
     try {
       const { data } = await axios.post(
         `${BackendURL}/user/verify-otp`,
-        { email, otp: enteredOtp }, // ✅ FIXED
+        { email, otp: enteredOtp },
         { withCredentials: true }
       );
 
