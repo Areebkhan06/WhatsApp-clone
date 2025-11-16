@@ -8,7 +8,7 @@ const WhatsappContext = createContext();
 // ✅ Provider component
 export const WhatsappProvider = ({ children }) => {
   const BackendURL =
-    import.meta.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:3015";
+    "https://whats-app-clone-backend.vercel.app" || "http://localhost:3015";
   const [user, setUser] = useState(null);
   const [selectedChat, setselectedChat] = useState(null);
   const [messages, setMessages] = useState([]);
